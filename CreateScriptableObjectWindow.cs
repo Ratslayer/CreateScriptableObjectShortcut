@@ -18,30 +18,6 @@ public class CreateScriptableObjectWindow : EditorWindow
     private Type ParentType => typeof(ScriptableObject);
     //display name that is used in search
     private string GetTypeDisplayName(Type type) => type.Name;
-    //matching method that filters through type names based on input
-    private bool Matches(string name, string typeName)
-    {
-        //first do a basic caseless comparison
-        var result = typeName.ToLower().StartsWith(name.ToLower());
-        if (!result)
-        {
-            //then do capital case matching
-            var nameSplits = Split(name);
-            var typeSplits = Split(typeName);
-            static string[] Split(string s) => Regex.Replace(s, "([A-Z\\d])", " $1").Trim().Split();
-            if (nameSplits.Length <= typeSplits.Length)
-            {
-                result = true;
-                for (int i = 0; i < nameSplits.Length; i++)
-                    if (!typeSplits[i].StartsWith(nameSplits[i]))
-                    {
-                        result = false;
-                        break;
-                    }
-            }
-        }
-        return result;
-    }
     //shortcut params
     [Shortcut("Create Scriptable Object", KeyCode.C, ShortcutModifiers.Action | ShortcutModifiers.Shift)]
     private static void Shortcut() => OpenWindow();
@@ -85,6 +61,30 @@ public class CreateScriptableObjectWindow : EditorWindow
                 else
                     result = Regex.Match(selectionPath, ".+/").Value;
                 result += InitialAssetName + ".asset";
+            }
+        }
+        return result;
+    }
+    //matching method that filters through type names based on input
+    private bool Matches(string name, string typeName)
+    {
+        //first do a basic caseless comparison
+        var result = typeName.ToLower().StartsWith(name.ToLower());
+        if (!result)
+        {
+            //then do capital case matching
+            var nameSplits = Split(name);
+            var typeSplits = Split(typeName);
+            static string[] Split(string s) => Regex.Replace(s, "([A-Z\\d])", " $1").Trim().Split();
+            if (nameSplits.Length <= typeSplits.Length)
+            {
+                result = true;
+                for (int i = 0; i < nameSplits.Length; i++)
+                    if (!typeSplits[i].StartsWith(nameSplits[i]))
+                    {
+                        result = false;
+                        break;
+                    }
             }
         }
         return result;
