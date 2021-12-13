@@ -90,9 +90,11 @@ public class CreateScriptableObjectWindow : EditorWindow
     {
         //get all child types of parent type
         var parent = ParentType;
-        _types = (from type in Assembly.GetAssembly(parent).GetTypes()
-                  where type.IsClass && !type.IsAbstract && type != parent && parent.IsAssignableFrom(type)
-                  select type).ToArray();
+        _types = AppDomain.CurrentDomain.GetAssemblies()
+         .SelectMany(assembly => assembly.GetTypes())
+         .Where(type => !type.IsAbstract && parent.IsAssignableFrom(type))
+         .Select(type => type)
+         .ToArray();
         Array.Sort(_types, (t1, t2) => GetTypeDisplayName(t1).CompareTo(GetTypeDisplayName(t2)));
         //set to false so the GUI can set focus on text when it opens
         _hasDrawn = false;
