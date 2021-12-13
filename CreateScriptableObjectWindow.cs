@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,10 +7,8 @@ using UnityEditor;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
 public class CreateScriptableObjectWindow : EditorWindow
-{ 
+{
     #region Customize
-    //name of created asset before renaming
-    private const string InitialAssetName = "Asset";
     //window dimensions
     private const float Width = 200, Height = 300;
     //base type whose children are searched through.
@@ -60,7 +58,6 @@ public class CreateScriptableObjectWindow : EditorWindow
                 //selection is an asset so use its folder
                 else
                     result = Regex.Match(selectionPath, ".+/").Value;
-                result += InitialAssetName + ".asset";
             }
         }
         return result;
@@ -93,8 +90,8 @@ public class CreateScriptableObjectWindow : EditorWindow
     {
         //get all child types of parent type
         var parent = ParentType;
-        _types = (from type in Assembly.GetExecutingAssembly().GetTypes()
-                  where type.IsClass && type != parent && parent.IsAssignableFrom(type)
+        _types = (from type in Assembly.GetAssembly(parent).GetTypes()
+                  where type.IsClass && !type.IsAbstract && type != parent && parent.IsAssignableFrom(type)
                   select type).ToArray();
         Array.Sort(_types, (t1, t2) => GetTypeDisplayName(t1).CompareTo(GetTypeDisplayName(t2)));
         //set to false so the GUI can set focus on text when it opens
@@ -123,7 +120,8 @@ public class CreateScriptableObjectWindow : EditorWindow
                     else
                     {
                         var obj = CreateInstance(type);
-                        ProjectWindowUtil.CreateAsset(obj, _path);
+                        var path = _path + type.Name + ".asset";
+                        ProjectWindowUtil.CreateAsset(obj, path);
                     }
                     break;
                 case KeyCode.Escape:
