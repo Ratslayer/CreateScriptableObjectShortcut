@@ -66,7 +66,7 @@ public class CreateScriptableObjectWindow : EditorWindow
     private bool Matches(string name, string typeName)
     {
         //first do a basic caseless comparison
-        var result = typeName.ToLower().StartsWith(name.ToLower());
+        var result = typeName.ToLower().Contains(name.ToLower());
         if (!result)
         {
             //then do capital case matching
