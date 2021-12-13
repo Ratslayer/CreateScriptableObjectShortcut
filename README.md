@@ -2,6 +2,8 @@
 This is a script file that adds a shortcut for easy scriptable object creation, without having to use CreateAssetMenuAttribute.
 Just add this script to your project (preferably in an Editor folder) and it'll add a shortcut to Unity (Ctrl+Shift+C as default).
 
+![create scriptable object](https://user-images.githubusercontent.com/9724580/145808888-7f704887-abc6-4363-a675-e01680a7c7a4.gif)
+
 Here's how it works:
 - Select any asset or folder in your project view.
 - Invoke the shortcut.
@@ -17,3 +19,4 @@ The asset won't be created if displayed type list is empty;
 Checkout the customize region for simple script customization.
 I recommend changing ParentType property from ScriptableObject to your own type that extends ScriptableObject.
 Many types extend ScriptableObject (including windows) and they'll clutter the search list.
+
