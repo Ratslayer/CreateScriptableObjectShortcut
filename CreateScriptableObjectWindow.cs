@@ -13,11 +13,11 @@ public class CreateScriptableObjectWindow : EditorWindow
     private const float Width = 200, Height = 300;
     //base type whose children are searched through.
     //I recommend creating your own base scriptable object so that you don't have to go through windows and stuff
-    private Type ParentType => typeof(ScriptableObject);
+    private Type ParentType => typeof(BaseScriptableObject);
     //display name that is used in search
     private string GetTypeDisplayName(Type type) => type.Name;
     //shortcut params
-    [Shortcut("Create Scriptable Object", KeyCode.C, ShortcutModifiers.Action | ShortcutModifiers.Shift)]
+    [Shortcut("Create Scriptable Object", KeyCode.C, ShortcutModifiers.Shift)]
     private static void Shortcut() => OpenWindow();
     #endregion
     #region Functionality
@@ -107,7 +107,9 @@ public class CreateScriptableObjectWindow : EditorWindow
         //display types that match input name
         var name = _name?.Trim();
         var isEmpty = string.IsNullOrWhiteSpace(name);
-        var visibleTypes = from type in _types where isEmpty || Matches(name, GetTypeDisplayName(type)) select type;
+        var visibleTypes = (from type in _types where isEmpty || Matches(name, GetTypeDisplayName(type)) select type).ToList();
+        //if name is exact match, make sure it's on top
+        visibleTypes.Sort((s1, s2) => s1.Name == name ? -1 : s2.Name == name ? 1 : 0);
         foreach (var type in visibleTypes)
             EditorGUILayout.LabelField(GetTypeDisplayName(type));
         //process keys. Create asset from first match on Enter, close on Escape
