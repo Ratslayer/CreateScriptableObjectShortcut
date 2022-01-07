@@ -13,7 +13,7 @@ public class CreateScriptableObjectWindow : EditorWindow
     private const float Width = 200, Height = 300;
     //base type whose children are searched through.
     //I recommend creating your own base scriptable object so that you don't have to go through windows and stuff
-    private Type ParentType => typeof(BaseScriptableObject);
+    private Type ParentType => typeof(ScriptableObject);
     //display name that is used in search
     private string GetTypeDisplayName(Type type) => type.Name;
     //shortcut params
